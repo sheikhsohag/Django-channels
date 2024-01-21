@@ -19,6 +19,10 @@ class MySyncConsumer(SyncConsumer):
         # when client sent data
         print('Massaged Received...',  event)
         print('Massaged is',  event['text'])
+        self.send({
+            'type': 'websocket.send',
+            'text': 'Message Sent to Client'
+        })
     
     def websocket_disconnect(self, event):
         # it occur when closing connect or lost connect from client side or server side
