@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>count page</h2>
+
+    <h2 id="ct"> </h2>
+
+
+
+    <script>
+        var ws = new WebSocket('ws://127.0.0.1:8000/ws/ac/')
+
+        // connection open
+        ws.onopen = function(){
+            console.log('Websocket connection opened...')
+            ws.send('Hi, Message from Client...') 
+        }
+
+        // ws.onmessage = function(event){
+        //     console.log('Message Receiced from server...', event.data)
+        //     document.getElementById("ct").innerText = event.data
+        // }
+
+        ws.onmessage = function(event){
+            console.log('Message Receiced from server...', event.data)
+            var data = JSON.parse(event.data)
+            document.getElementById("ct").innerText = data.count
+        }
+
+        ws.onerror = function(event){
+            console.log('Websocket error Occured ', event)
+        }
+
+        ws.onclose = function(event){
+            console.log('Websocket Connection Closed...', event)
+        }
+
+        // ============================================
+
+        // // for ready state
+        
+        // // ws.addEventListener('open', (event)=>{
+        // //     console.log('Websocket connection opened...',event)
+        // //     ws.send('Hi, Message from Client...')
+        // // })
+
+        // ws.addEventListener('open', ()=>{
+        //     console.log('Websocket connection opened...')
+        //     ws.send('Hi, Message from Client...')
+        // })
+
+        // ws.addEventListener('message', (event)=>{
+        //     console.log('Message Receiced from server...', event)
+        // })
+
+        // ws.addEventListener('onerror', (event)=>{
+        //     console.log('Websocket error Occured ', event)
+        // })
+
+        // ws.addEventListener('onclose', (event)=>{
+        //     console.log('Websocket Connection Closed...', event)
+        // })
+
+        
+
+
+    </script>
+   
+
+</body>
+</html>
