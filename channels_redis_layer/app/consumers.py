@@ -18,11 +18,18 @@ class MySyncConsumer(SyncConsumer):
         
         print("channels name...", self.channel_name)
         
+        print("group name...", self.scope['url_route']['kwargs']['groupname'])
+        
+        self.group_name = self.scope['url_route']['kwargs']['groupname']
+        
+        
+        print('self.group_name============', self.group_name)
+        
         # self.channels_layer.group_add()   it deafult async ..
         # async_to_sync use convert 
         
         async_to_sync(self.channel_layer.group_add)(
-            'programmers',    #group name
+             self.group_name,    #group name
              self.channel_name  #channels name
             )
         self.send({
@@ -32,7 +39,7 @@ class MySyncConsumer(SyncConsumer):
     
     def websocket_receive(self, event):
         print('Massaged Received...',  event['text'])
-        async_to_sync(self.channel_layer.group_send)('programmers', {
+        async_to_sync(self.channel_layer.group_send)(self.group_name, {
             'type': 'chat.message',
             'message': event['text']
         })
@@ -56,7 +63,7 @@ class MySyncConsumer(SyncConsumer):
         print("channels name...", self.channel_name)
         
         async_to_sync(self.channel_layer.group_discard)(
-            'programmers', 
+            self.group_name, 
              self.channel_name
             )
         
@@ -72,12 +79,13 @@ class MyAsyncConsumer(AsyncConsumer):
         print("channels Layer...", self.channel_layer)
         
         print("channels name...", self.channel_name)
+        self.group_name = self.scope['url_route']['kwargs']['groupname']
         
         # self.channels_layer.group_add()   it deafult async ..
         # async_to_sync use convert 
         
         await self.channel_layer.group_add(
-            'programmers',    #group name
+            self.group_name,    #group name
              self.channel_name  #channels name
             )
         await self.send({
@@ -87,7 +95,7 @@ class MyAsyncConsumer(AsyncConsumer):
     
     async def websocket_receive(self, event):
         print('Massaged Received...',  event['text'])
-        await self.channel_layer.group_send('programmers', {
+        await self.channel_layer.group_send(self.group_name, {
             'type': 'chat.message',
             'message': event['text']
         })
@@ -111,7 +119,7 @@ class MyAsyncConsumer(AsyncConsumer):
         print("channels name...", self.channel_name)
         
         await self.channel_layer.group_discard(
-            'programmers', 
+            self.group_name, 
              self.channel_name
             )
         

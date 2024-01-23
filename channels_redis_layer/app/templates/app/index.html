@@ -6,14 +6,31 @@
     <title>Chat App</title>
 </head>
 <body>
+
+    <h1> Group Name: {{groupname}}</h1>
     <textarea id="chat-log" cols="100" rows="10"></textarea>
     <input type="text" name="" id="chat-message-input" size="100"><br>
     <input type="button" value="Send" id = "chat-message-submit">
 
+    {{ groupname|json_script:"group-name" }}
+ 
+    <!--  group-name work as a id in html..it is js.. -->
+
     <br>
 
     <script>
-        var ws = new WebSocket('ws://127.0.0.1:8000/ws/sc/')
+        const value = document.getElementById('group-name').textContent
+        const groupName = JSON.parse(value)
+        console.log(groupName)
+        // var ws = new WebSocket('ws://127.0.0.1:8000/ws/sc/')
+
+        var ws = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/sc/'
+            + groupName
+            + '/'
+        )
 
         ws.onopen = function(){
             console.log('Websocket connection opened...')
