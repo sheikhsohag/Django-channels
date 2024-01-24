@@ -8,7 +8,12 @@
 <body>
 
     <h1> Group Name: {{groupname}}</h1>
-    <textarea id="chat-log" cols="100" rows="10"></textarea>
+    <textarea id="chat-log" cols="100" rows="10">
+     {% for chat in chats %}
+         {{chat.content}}
+     {% endfor %}
+    </textarea>
+
     <input type="text" name="" id="chat-message-input" size="100"><br>
     <input type="button" value="Send" id = "chat-message-submit">
 
@@ -27,7 +32,7 @@
         var ws = new WebSocket(
             'ws://'
             + window.location.host
-            + '/ws/sc/'
+            + '/ws/ac/'
             + groupName
             + '/'
         )
