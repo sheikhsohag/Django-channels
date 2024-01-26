@@ -12,7 +12,7 @@
      {% for chat in chats %}
          {{chat.content}}
      {% endfor %}
-    </textarea>
+    </textarea><br>
 
     <input type="text" name="" id="chat-message-input" size="100"><br>
     <input type="button" value="Send" id = "chat-message-submit">
@@ -32,7 +32,7 @@
         var ws = new WebSocket(
             'ws://'
             + window.location.host
-            + '/ws/ac/'
+            + '/ws/sc/'
             + groupName
             + '/'
         )
