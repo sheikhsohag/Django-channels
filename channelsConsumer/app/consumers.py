@@ -1,6 +1,8 @@
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 import json
+from . models import Chat, Group
+from channels.db import database_sync_to_async
 
 class MyWebsocketConsumer(WebsocketConsumer):
     
@@ -27,6 +29,16 @@ class MyWebsocketConsumer(WebsocketConsumer):
         print('======================')
         message = data['msg']
         print('Actual message...', message)
+        group = Group.objects.get(name = self.group_name)
+        
+        content = Chat(
+            content = data["msg"],
+            group = group,
+            # user = 
+        )
+        
+        content.save()
+        
         async_to_sync(self.channel_layer.group_send)(
             self.group_name,
             {
@@ -69,10 +81,18 @@ class MyAsyncWebsocketConsumer(AsyncWebsocketConsumer):
         print("data....", type(data))
         print('Actual Data...', data["msg"])
         message = data["msg"]
+        
+        group = await database_sync_to_async(Group.objects.get)(name = self.group_name)
+        
+        contents = Chat(
+            content = data["msg"],
+            group = group
+        )
+        
+        await database_sync_to_async(contents.save)()
           
         await self.channel_layer.group_send(
             self.group_name,
-            
             {
                 'type': 'chat.message',
                 'message': message
