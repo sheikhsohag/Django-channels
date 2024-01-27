@@ -1,6 +1,6 @@
 from channels.generic.websocket import JsonWebsocketConsumer, AsyncJsonWebsocketConsumer
-
-
+from time import sleep
+import asyncio
 
 class MyJsonWebsocketConsumer(JsonWebsocketConsumer):
     
@@ -14,9 +14,11 @@ class MyJsonWebsocketConsumer(JsonWebsocketConsumer):
         print('Message received from client....', content)
         # this content is dict formmat because of used jsonWebsocketconsumer..
         # otherwise we get string type 
-        print('Type of content...', type(content))
-        
-        self.send_json({'msg':'message from server to client'})
+        for i in range(20):
+            self.send_json({
+                'message':str(i)
+            })
+            sleep(1)
         
     def disconnect(self, close_code):
         print('Websocket Disconnected...', close_code)
@@ -34,9 +36,11 @@ class MyAsyncJsonWebsocketConsumer(AsyncJsonWebsocketConsumer):
         print('Message received from client...a.', content)
         # this content is dict formmat because of used jsonWebsocketconsumer..
         # otherwise we get string type 
-        print('Type of content...', type(content))
-        
-        await self.send_json({'msg':'message from server to client'})
+        for i in range(20):
+            await self.send_json({
+                "message": str(i)
+            })
+            await asyncio.sleep(1)
         
     async def disconnect(self, close_code):
         print('Websocket Disconnected...', close_code)

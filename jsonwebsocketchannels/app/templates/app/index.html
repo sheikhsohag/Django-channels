@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <textarea  id="chat-log" cols="100" rows="10"></textarea>
+    <input type="text" name="" id=""> -->
+    <h1>Count Page</h1>
+    <h1 id="count"></h1>
+
+
+    <script>
+        var ws = new WebSocket('ws://127.0.0.1:8000/ws/ajwc/')
+        ws.onopen = function(){
+            console.log('webSocket connections Open...')
+            ws.send(JSON.stringify({"msg":'message from Client'}))
+        }
+
+        ws.onmessage = function(event) {
+            console.log('Message Received from Server...', event.data)
+            var data = JSON.parse(event.data)
+            console.log('Actual data...', data.message)
+            document.getElementById('count').innerText = data.message
+        }
+
+        // ws.onerror = function(event){
+        //     console.log('find Errors...', event)
+        // }
+
+        // ws.onclose()
+        //  document.getElementById('count').innerText = 
+          
+    </script>
+</body>
+</html>
