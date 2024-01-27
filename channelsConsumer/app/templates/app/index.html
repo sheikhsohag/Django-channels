@@ -10,7 +10,7 @@
     
     <textarea  id="chat-log" cols="100" rows="20">
         {% for chat in chats %}
-        {{chat.content}}
+        {{ chat.user }}: {{ chat.content }}
         {% endfor %}
     </textarea><br>
     
@@ -36,10 +36,15 @@
 
 
         ws.onmessage = function(event){
-            console.log('onmessage event...', event.data)
-            const data = JSON.parse(event.data)
-            console.log(data.msg)
-            document.querySelector('#chat-log').value += (data.msg  + '\n')
+            // console.log('Message Receiced from server...', event.data)
+            const data = JSON.parse(event.data) 
+            // console.log(data.msg.msg)
+
+            // console.log("Username ...", data.msg.msg)
+            document.querySelector('#chat-log').value += ("You: "+ data.msg + '\n')
+
+            // document.getElementById('chat-log').value += (data.user + ': ')
+            // document.getElementById('chat-log').value += (data.msg + '\n')
         }
 
         ws.onclose = function()  {
