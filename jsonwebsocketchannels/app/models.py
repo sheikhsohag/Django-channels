@@ -12,6 +12,6 @@ class Chat(models.Model):
     group = models.ForeignKey(Group, on_delete = models.CASCADE)
     timestamp = models.DateTimeField(auto_now = True)
     content = models.CharField(max_length = 500)
-    # user = models.ForeignKey(User, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
     
     
