@@ -3,6 +3,9 @@ from time import sleep
 import asyncio
 # from asgiref.sync import async_to_sync
 from asgiref.sync import async_to_sync
+from django.contrib.auth.models import User
+from . models import Chat,Group
+from channels.db import database_sync_to_async
 
 class MyJsonWebsocketConsumer(JsonWebsocketConsumer):
     
@@ -24,6 +27,18 @@ class MyJsonWebsocketConsumer(JsonWebsocketConsumer):
         print('Type of Content...', type(content))
         print('Actual message...', content['msg'])
         
+        group = Group.objects.get(name=self.group_name)
+        # user = self.scope['user']
+        # user = User.objects.get(username=user)
+        
+        chat = Chat(
+            content = content['msg'],
+            # user = user,
+            group = group
+        )
+        
+        chat.save()
+        
         async_to_sync(self.channel_layer.group_send)(
             self.group_name,
             {
@@ -35,7 +50,7 @@ class MyJsonWebsocketConsumer(JsonWebsocketConsumer):
     def chat_message(self, event):
         print('Event ...', event)
         self.send_json({
-            'message': event['message']
+            'msg': event['message']
         })
 
         
@@ -61,6 +76,19 @@ class MyAsyncJsonWebsocketConsumer(AsyncJsonWebsocketConsumer):
         print('Message received from client...a.', content)
         # this content is dict formmat because of used jsonWebsocketconsumer..
         # otherwise we get string type
+        
+        group = await database_sync_to_async(Group.objects.get)(name=self.group_name)
+        # user = self.scope['user']
+        # user = User.objects.get(username=user)
+        
+        chat = Chat(
+            content = content['msg'],
+            # user = user,
+            group = group
+        )
+        
+        database_sync_to_async(chat.save)()
+        
         await self.channel_layer.group_send(
             self.group_name,
             {
